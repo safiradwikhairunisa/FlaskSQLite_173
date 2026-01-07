@@ -9,6 +9,7 @@ def connectdb():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def init_db():
     conn = connectdb()
     conn.execute('''CREATE TABLE IF NOT EXISTS books (
@@ -36,15 +37,14 @@ def add():
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
-    return render_template("add.html")
+    return render_template('add.html')
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     conn = connectdb()
     book = conn.execute("SELECT * FROM books WHERE id = ?", (id,)).fetchone()
-    if not book:
-        conn.close()
-        return "Buku tidak ditemukan", 404
+    if not book:\
+    return "Buku tidak ditemukan", 404
     
     if request.method == 'POST':
         judul = request.form['judul']
@@ -54,8 +54,8 @@ def edit(id):
         conn.close()
         return redirect(url_for('index'))
     
-    @app.route('/delete/<int:id>', methods=['POST'])
-    def delete(id):
+@app.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
         conn = connectdb()
         conn.execute("DELETE FROM books WHERE id = ?", (id,))
         conn.commit()
@@ -64,4 +64,4 @@ def edit(id):
     
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=6001, debug=True)
+    app.run(host='0.0.0.0', port=6005, debug=True)
